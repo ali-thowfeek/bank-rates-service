@@ -8,7 +8,7 @@ const { Bank, Currency, BankRate } = require("./models");
 const { Op } = require("sequelize");
 const sequelize = require("./db");
 
-const PORT = 8081;
+const PORT = 8090;
 
 app.post("/rates", async function (req, res) {
   const { bankIds, currencyId, date } = req.body;
