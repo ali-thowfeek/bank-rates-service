@@ -1,5 +1,5 @@
 {
-  "name": "bank-rates-app",
+  "name": "bank-rates-service",
   "version": "1.0.0",
   "description": "Sri Lanka bank exchange rates",
   "main": "app.js",
@@ -10,13 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.6.3",
-    "body-parser": "^1.20.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "mysql": "^2.18.1",
-    "node-cron": "^3.0.1",
-    "uuid": "^8.3.2"
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "sequelize": "^6.37.3"
   }
 }
