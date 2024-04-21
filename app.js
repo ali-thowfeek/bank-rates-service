@@ -1,41 +1,76 @@
-var express = require("express");
-var app = express();
-var fs = require("fs");
-
-const cors = require("cors");
-const db = require("./db");
+require("dotenv").config();
+const express = require("express");
 const bodyParser = require("body-parser");
-const PORT = process.env.PORT || 8000;
-
+const app = express();
 app.use(bodyParser.json());
 
-app.post("/rates", function (req, res) {
+const { Bank, Currency, BankRate } = require("./models");
+const { Op } = require("sequelize");
+const sequelize = require("./db");
+
+const PORT = 8081;
+
+app.post("/rates", async function (req, res) {
   const { bankIds, currencyId, date } = req.body;
-  console.log("req.body", req.body);
 
-  // const formatedDate = date || new Date().toISOString().substring(0, 10);
+  const formattedDate = date || new Date().toISOString().substring(0, 10);
+  const [year, month] = formattedDate.split("-");
 
-  //TODO: rewrite with sequilize
-});
+  // Calculate the start date of the specified month
+  const startDate = `${year}-${month}-01`;
 
-app.get("/banks", function (req, res) {
-  //TODO: rewrite with sequilize
-  db.all("SELECT * FROM bank", function (err, result) {
-    if (err) throw err;
+  // Calculate the end date of the specified month
+  const lastDayOfMonth = new Date(year, month, 0).getDate(); // Get the last day of the month
+  const endDate = `${year}-${month}-${lastDayOfMonth}`;
+
+  try {
+    const result = await BankRate.findAll({
+      where: {
+        bank_id: bankIds,
+        currency_id: currencyId,
+        date: {
+          [Op.gte]: startDate,
+          [Op.lte]: endDate,
+        },
+      },
+      include: [
+        {
+          model: Bank,
+        },
+        {
+          model: Currency,
+        },
+      ],
+    });
     res.json(result);
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
-app.get("/currencies", function (req, res) {
-  //TODO: rewrite with sequilize
-  db.all("SELECT * FROM currency", function (err, result) {
-    if (err) throw err;
+app.get("/banks", async function (req, res) {
+  try {
+    const result = await Bank.findAll();
     res.json(result);
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
-var server = app.listen(PORT, function () {
-  var host = server.address().address;
-  var port = server.address().port;
-  console.log("app listening at http://%s:%s", host, port);
+app.get("/currencies", async function (req, res) {
+  try {
+    const result = await Currency.findAll();
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+sequelize.sync().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 });
