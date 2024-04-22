@@ -42,6 +42,21 @@ paths:
         '500':
           description: Internal server error
   /currencies:
+    get:
+      summary: Retrieve Currencies
+      description: |
+        Retrieve a list of Currencies.
+      responses:
+        '200':
+          description: A list of Currencies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Currency'
+        '500':
+          description: Internal server error
     post:
       summary: Create a new currency
       description: |
