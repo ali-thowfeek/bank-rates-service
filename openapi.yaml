@@ -6,6 +6,40 @@ info:
 servers:
   - url: http://localhost:8080
 paths:
+  /rates:
+    post:
+      summary: Retrieve bank rates
+      description: Retrieve bank rates for specified bank IDs, currency ID, and date.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bankIds:
+                  type: array
+                  items:
+                    type: integer
+                  description: List of bank IDs
+                currencyId:
+                  type: integer
+                  description: Currency ID
+                date:
+                  type: string
+                  format: date
+                  description: Date in YYYY-MM-DD format. If not provided, current date is used.
+      responses:
+        '200':
+          description: Bank rates retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BankRate'
+        '500':
+          description: Internal server error
   /banks:
     get:
       summary: Retrieve banks
@@ -116,3 +150,21 @@ components:
         symbol:
           type: string
           description: The symbol of the new currency.
+    BankRate:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the bank rate.
+        rate:
+          type: number
+          description: The rate of the bank.
+        date:
+          type: string
+          format: date
+          description: The date of the bank rate.
+        bank:
+          $ref: '#/components/schemas/Bank'
+        currency:
+          $ref: '#/components/schemas/Currency'
