@@ -69,6 +69,30 @@ app.get("/currencies", async function (req, res) {
   }
 });
 
+// Create a new bank
+app.post("/banks", async (req, res) => {
+  try {
+    const { name } = req.body;
+    const bank = await Bank.create({ name });
+    res.status(201).json(bank);
+  } catch (error) {
+    console.error("Error creating bank:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Create a new currency
+app.post("/currencies", async (req, res) => {
+  try {
+    const { name, symbol } = req.body;
+    const currency = await Currency.create({ name, symbol });
+    res.status(201).json(currency);
+  } catch (error) {
+    console.error("Error creating currency:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
