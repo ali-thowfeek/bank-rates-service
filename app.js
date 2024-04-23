@@ -81,6 +81,28 @@ app.post("/banks", async (req, res) => {
   }
 });
 
+// Delete a bank by ID
+app.delete("/banks/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the bank by ID
+    const bank = await Bank.findByPk(id);
+
+    // If bank not found, return 404
+    if (!bank) {
+      return res.status(404).json({ error: "Bank not found" });
+    }
+
+    await bank.destroy();
+
+    res.status(204).end(); // No content to send back
+  } catch (error) {
+    console.error("Error deleting bank:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 // Create a new currency
 app.post("/currencies", async (req, res) => {
   try {

@@ -75,6 +75,24 @@ paths:
                 $ref: '#/components/schemas/Bank'
         '500':
           description: Internal server error
+    delete:
+      summary: Delete a bank by ID
+      description: |
+        Delete a bank by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the bank to delete
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Bank deleted successfully
+        '404':
+          description: Bank not found
+        '500':
+          description: Internal server error
   /currencies:
     get:
       summary: Retrieve Currencies
