@@ -72,8 +72,8 @@ app.get("/currencies", async function (req, res) {
 // Create a new bank
 app.post("/banks", async (req, res) => {
   try {
-    const { name } = req.body;
-    const bank = await Bank.create({ name });
+    const { name, shortName } = req.body;
+    const bank = await Bank.create({ name, shortName });
     res.status(201).json(bank);
   } catch (error) {
     console.error("Error creating bank:", error);

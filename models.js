@@ -13,6 +13,10 @@ const Bank = db.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    shortName: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
   },
   {
     tableName: "bank",
